@@ -6,7 +6,6 @@ import com.ampta.central_shops.exceptions.ResourceNotFoundException;
 import com.ampta.central_shops.model.Image;
 import com.ampta.central_shops.model.Product;
 import com.ampta.central_shops.repository.ImageRepository;
-import com.ampta.central_shops.repository.ProductRepository;
 import com.ampta.central_shops.service.product.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,7 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public List<ImageDto> saveImage(List<MultipartFile> files, Long productId) {
+    public List<ImageDto> saveImages(List<MultipartFile> files, Long productId) {
         Product product = productService.getProductById(productId);
         List<ImageDto> savedImageDto = new ArrayList<>();
         for(MultipartFile file: files){
