@@ -1,6 +1,7 @@
 package com.ampta.central_shops.service.product;
 
 import com.ampta.central_shops.exceptions.ProductNotFoundException;
+import com.ampta.central_shops.exceptions.ResourceNotFoundException;
 import com.ampta.central_shops.model.Category;
 import com.ampta.central_shops.model.Product;
 import com.ampta.central_shops.repository.CategoryRepository;
@@ -51,14 +52,14 @@ public class ProductService implements IProductService {
     public Product getProductById(Long id) {
         return productRepository
                 .findById(id).orElseThrow(
-                        () -> new ProductNotFoundException("Product not found"));
+                        () -> new ResourceNotFoundException("Product not found"));
     }
 
     @Override
     public void deleteProductById(Long id) {
         productRepository.findById(id)
                 .ifPresentOrElse(productRepository::delete,
-                        () -> {throw new ProductNotFoundException("Product not found!"); });
+                        () -> {throw new ResourceNotFoundException("Product not found!"); });
     }
 
     @Override
@@ -66,7 +67,7 @@ public class ProductService implements IProductService {
         return productRepository.findById(productId)
                 .map(existingProduct -> updateExistingProduct(existingProduct, request))
                 .map(productRepository::save)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
     }
 
 
