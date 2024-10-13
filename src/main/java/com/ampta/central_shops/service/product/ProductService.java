@@ -1,13 +1,17 @@
 package com.ampta.central_shops.service.product;
 
-import com.ampta.central_shops.exceptions.ProductNotFoundException;
+import com.ampta.central_shops.dto.ImageDto;
+import com.ampta.central_shops.dto.ProductDto;
 import com.ampta.central_shops.exceptions.ResourceNotFoundException;
 import com.ampta.central_shops.model.Category;
+import com.ampta.central_shops.model.Image;
 import com.ampta.central_shops.model.Product;
 import com.ampta.central_shops.repository.CategoryRepository;
+import com.ampta.central_shops.repository.ImageRepository;
 import com.ampta.central_shops.repository.ProductRepository;
 import com.ampta.central_shops.request.ProductRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +23,8 @@ public class ProductService implements IProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Product addProduct(ProductRequest request) {
@@ -118,5 +124,24 @@ public class ProductService implements IProductService {
     @Override
     public int countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products){
+        return products.stream().map(this:: convertToDto).toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product){
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream()
+                .map(image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+
+        productDto.setImages(imageDtos);
+        return productDto;
+
+
     }
 }

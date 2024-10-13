@@ -1,5 +1,6 @@
 package com.ampta.central_shops.service.product;
 
+import com.ampta.central_shops.dto.ProductDto;
 import com.ampta.central_shops.model.Product;
 import com.ampta.central_shops.request.ProductRequest;
 
@@ -17,4 +18,8 @@ public interface IProductService {
     List<Product> getProductsByName(String name);
     List<Product> getProductsByBrandAndName(String brand, String name);
     int countProductsByBrandAndName (String brand, String name);
+
+    List<ProductDto> getConvertedProducts(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }
